@@ -20,26 +20,23 @@ jobs:
         python-version: '3.9'
 
     - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
+      run: pip install -r requirements.txt
 
     - name: Run tests
-      run: |
-        pytest test_app.py -v
+      run: pytest test_app.py -v
 
     - name: Build Docker image
-      run: |
-        docker build -t telecom-node-monitor:latest .
+      run: docker build -t telecom-node-monitor:latest .
 
     - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
+      run: echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
     - name: Push Docker image
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
       run: |
-        docker tag telecom-node-monitor:latest \
-        ${{ secrets.DOCKER_USERNAME }}/telecom-node-monitor:latest
-        docker push \
-        ${{ secrets.DOCKER_USERNAME }}/telecom-node-monitor:latest
+        docker tag telecom-node-monitor:latest $DOCKER_USER/telecom-node-monitor:latest
+        docker push $DOCKER_USER/telecom-node-monitor:latest
