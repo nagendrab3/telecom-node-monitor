@@ -53,4 +53,4 @@ pytest test_app.py -v
 ```
 
 ## 👨‍💻 Author
-Nagendra Babu — 8+ years Telecom Engineer
+Nagendra Babu 
